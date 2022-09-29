@@ -15,8 +15,9 @@ public:
 int foo()
 {
 	i = 3;
-	A ob;
-	ob.~A();
+	{
+		A ob;
+	}
 	return i;
 }
 

@@ -1,10 +1,7 @@
 #include <iostream>
 class Test {
 public:
-	Test(int num1, int num2) {
-		this->num1 = num1;
-		this->num2 = num2;
-	}
+	Test(int num1, int num2) : num1(num1), num2(num2) {}
 	int num1;
 	int num2;
 	void print() {
