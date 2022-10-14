@@ -22,7 +22,7 @@ public:
 
 int main() {
 	Class a;
-	std::cout << a << " (초기값),";
+	std::cout << a << " (초기값), ";
 	a++;
 	std::cout << a << " (a++ 결과), ";
 	++a;
