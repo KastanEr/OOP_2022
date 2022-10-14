@@ -1,7 +1,7 @@
 #include <iostream>
 #include <exception>
 
-class A : std::exception{
+class A {
 public:
 	A() {
 		std::cout << "Constructor()\n";
@@ -9,15 +9,18 @@ public:
 	~A() {
 		std::cout << "Destructor()\n";
 	}
-	const char* what() { return "10"; }
+
+	int exception() {
+		return 10;
+	}
 };
 
 int main() {
 	try {
-		A a();
-		throw a;
+		A a;
+		throw a.exception();
 	}
-	catch(A a) {
-		std::cout << "Catch " << a.what() << std::endl;
+	catch(int i) {
+		std::cout << "Catch" << i << std::endl;
 	}
 }

@@ -25,15 +25,13 @@ class Student : public Person {
 private:
 	int studentID;
 public:
-	Student(string name, int age, string address, int studentID) : Person(name, age, address) {
-		this->studentID = studentID;
-	}
+	Student(string name, int age, string address, int studentID) : Person(name, age, address), studentID(studentID) {}
 	int getStudentID() {
 		return studentID;
 	}
 };
 
 int main() {
-	Student s("±èÀ±¼·", 23, "Áß±¸", 201902672);
-	cout << "Name : " << s.getName() << "\nAge : " << s.getAge() << "\nAddress : " << s.getAddress() << "\nStudent ID : " << s.getStudentID() << endl;
+	Student s("±èÀ±¼·", 23, "deajeon", 201902672);
+	cout << "Student Information\nName : " << s.getName() << "\nAge : " << s.getAge() << "\nAddress : " << s.getAddress() << "\nStudent ID : " << s.getStudentID() << endl;
 }
