@@ -9,7 +9,7 @@ public:
 	My_cat(const char* name);
 	My_cat(const My_cat& cat);
 	~My_cat();
-	My_cat& eat(int i);
+	My_cat eat(int i);
 	void show_status() const;
 };
 My_cat::My_cat() :name(NULL), weight(10) { }
@@ -25,8 +25,12 @@ My_cat::My_cat(const My_cat& cat) : weight(10) { // Copy constructor
 My_cat::~My_cat() { // Destructor
 	if (name) delete[] name;
 }
-My_cat& My_cat::eat(int i) {
+/*My_cat& My_cat::eat(int i) {
 	this->weight += i;
+	return *this;
+}*/
+My_cat My_cat::eat(int i) {
+	weight += i;
 	return *this;
 }
 void My_cat::show_status() const {
