@@ -42,10 +42,10 @@ public:
 class ShapeFactory : public AbstractFactory {
 public:
 	Shape* getShape(const char* shapeType) {
-		if (!strcmp(shapeType, "RECTANGLE")) {
+		if (!_stricmp(shapeType, "RECTANGLE")) {
 			return new Rectangle;
 		}
-		else if (!strcmp(shapeType, "SQUARE")) {
+		else if (!_stricmp(shapeType, "SQUARE")) {
 			return new Square;
 		}
 		return NULL;
@@ -55,10 +55,10 @@ public:
 class RoundedShpaeFactory : public AbstractFactory {
 public:
 	Shape* getShape(const char* shapeType) {
-		if (!strcmp(shapeType, "RECTANGLE")) {
+		if (!_stricmp(shapeType, "RECTANGLE")) {
 			return new RoudedRectangle;
 		}
-		else if (!strcmp(shapeType, "SQUARE")) {
+		else if (!_stricmp(shapeType, "SQUARE")) {
 			return new RoundedSquare;
 		}
 		return NULL;
@@ -101,6 +101,5 @@ int main() {
 	delete shape3;
 	delete shape4;
 
-	
 	return 0;
 }

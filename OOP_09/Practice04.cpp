@@ -2,33 +2,31 @@
 #include <cassert>
 
 class CEO {
-	int typeID;
 public:
-	CEO() : typeID(1) {}
 	virtual int rank() {
-		return typeID;
+		return 1;
 	}
 };
 
 class CPO {
-	int typeID;
 public:
-	CPO() : typeID(2) {}
 	virtual int rank() {
-		return typeID;
+		return 2;
 	}
 };
 
-class Manager : public CEO, public CPO{
-	int typeID;
+class Manager : public CEO, public CPO {
 public:
-	Manager() : typeID(3) {}
+	int rank() {
+		return 3;
+	}
 };
 
 class Staff : public CPO{
-	int typeID;
 public:
-	Staff() : typeID(4) {}
+	int rank() {
+		return 4;
+	}
 };
 
 int main() {

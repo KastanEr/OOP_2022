@@ -1,6 +1,7 @@
 #include <iostream>
 
 class BaseClass {
+
 public:
 	virtual int what() {
 		return 0;
@@ -17,9 +18,12 @@ public:
 int main() {
 	BaseClass* base = new DerivedClass();
 	DerivedClass* derived = dynamic_cast<DerivedClass*>(base);
-	if (base->what()) {
-		if (derived->what()) {
+	if (base != nullptr) {
+		if (derived != nullptr) {
 			std::cout << "Everything is OKAY" << std::endl;
+		}
+		else {
+			std::cout << "Everything is NOT OKAY" << std::endl;
 		}
 	}
 }
