@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 
 class Shape { // 도형을 나타내는 인터페이스
 public:
