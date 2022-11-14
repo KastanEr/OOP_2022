@@ -1,47 +1,47 @@
 #include <iostream>
 #include <string>
 
-class Shape {
+class Shape { // 도형을 나타내는 인터페이스
 public:
-	virtual void draw() = 0;
+	virtual void draw() = 0; // 도형 출력
 };
 
-class RoudedRectangle : public Shape {
+class RoudedRectangle : public Shape { // RoundedRactangle 클래스
 public:
-	void draw() {
+	void draw() { // RoundedRactangle에 맞는 맞는 메세지를 출력하는 draw 함수
 		std::cout << "Inside RoundedRectangle::draw() method." << std::endl;
 	}
 };
 
-class RoundedSquare : public Shape {
+class RoundedSquare : public Shape { //RoundedSquare 클래스
 public:
-	void draw() {
+	void draw() { // RoundedSquare에 맞는 맞는 메세지를 출력하는 draw 함수
 		std::cout << "Inside RoundedSquare::draw() method." << std::endl;
 	}
 };
 
-class Rectangle : public Shape {
+class Rectangle : public Shape { // Rectangle 클래스
 public:
-	void draw() {
+	void draw() { // Rectangle에 맞는 메세지를 출력하는 draw 함수
 		std::cout << "Inside Rectangle::draw() method." << std::endl;
 	}
 };
 
-class Square : public Shape {
+class Square : public Shape { // Square 클래스
 public:
-	void draw() {
+	void draw() { // Square에 맞는 메세지를 출력하는 draw 함수
 		std::cout << "Inside Square::draw() method." << std::endl;
 	}
 };
 
-class AbstractFactory {
+class AbstractFactory { // Shape를 만들어내는 가상 Factory클래스
 public:
-	virtual Shape* getShape(const char* shapeType) = 0;
+	virtual Shape* getShape(const char* shapeType) = 0; // getShape 함수의 원형
 };
 
-class ShapeFactory : public AbstractFactory {
+class ShapeFactory : public AbstractFactory { // 일반 Shape 클래스를 위한 Factory 클래스
 public:
-	Shape* getShape(const char* shapeType) {
+	Shape* getShape(const char* shapeType) { // shapeType에 따라 Ractangle, Square 객체를 반환하는 함수
 		if (!_stricmp(shapeType, "RECTANGLE")) {
 			return new Rectangle;
 		}
@@ -52,9 +52,9 @@ public:
 	}
 };
 
-class RoundedShpaeFactory : public AbstractFactory {
+class RoundedShpaeFactory : public AbstractFactory { // RoundedShape 클래스를 위한 Factory 클래스
 public:
-	Shape* getShape(const char* shapeType) {
+	Shape* getShape(const char* shapeType) { // shapeType에 따라 RoundedRactangle, RoundedSquare 객체를 반환하는 함수
 		if (!_stricmp(shapeType, "RECTANGLE")) {
 			return new RoudedRectangle;
 		}
@@ -65,9 +65,9 @@ public:
 	}
 };
 
-class FactoryProducer {
+class FactoryProducer { // Factory 객체를 만들어내는 클래스
 public:
-	static AbstractFactory* getFactory(bool rounded) {
+	static AbstractFactory* getFactory(bool rounded) { // rounded 인자에 따라 RoundedShpaeFactory, ShapeFactory 객체를 반환하는 함수
 		if (rounded) {
 			return new RoundedShpaeFactory;
 		}
@@ -78,22 +78,23 @@ public:
 };
 
 int main() {
-	AbstractFactory* shapeFactory = FactoryProducer::getFactory(false);
+	AbstractFactory* shapeFactory = FactoryProducer::getFactory(false); // rounded가 false 인 AbstractFactory 객체 생성
 
-	Shape* shape1 = shapeFactory->getShape("RECTANGLE");
-	shape1->draw();
+	Shape* shape1 = shapeFactory->getShape("RECTANGLE"); //shapeType이 "RECTANGLE"인 객체를 생성
+	shape1->draw(); // Ractangle 출력
 
-	Shape* shape2 = shapeFactory->getShape("SQUARE");
-	shape2->draw();
+	Shape* shape2 = shapeFactory->getShape("SQUARE"); //shapeType이 "SQUARE"인 객체를 생성
+	shape2->draw(); // Square 출력
 
-	AbstractFactory* shapeFactory1 = FactoryProducer::getFactory(true);
+	AbstractFactory* shapeFactory1 = FactoryProducer::getFactory(true); // rounded가 true 인 AbstractFactory 객체 생성
 
-	Shape* shape3 = shapeFactory1->getShape("RECTANGLE");
-	shape3->draw();
+	Shape* shape3 = shapeFactory1->getShape("RECTANGLE"); //shapeType이 "RECTANGLE"인 객체를 생성
+	shape3->draw(); // RoundedRactangle 출력
 
-	Shape* shape4 = shapeFactory1->getShape("SQUARE");
-	shape4->draw();
+	Shape* shape4 = shapeFactory1->getShape("SQUARE"); //shapeType이 "SQUARE"인 객체를 생성
+	shape4->draw(); // RoundedSquare 출력
 
+	// 동적할당한 메모리 해제
 	delete shapeFactory;
 	delete shapeFactory1;
 	delete shape1;
