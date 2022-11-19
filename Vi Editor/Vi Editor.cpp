@@ -11,6 +11,7 @@ class ViEditor {
 	static ViEditor* instance;
 	fstream* targetFile;
 	string contentText;
+	bool recoveryFlag;
 	vector<string> content;
 	int header;
 	string consoleMassage;
@@ -18,19 +19,20 @@ class ViEditor {
 	ViEditor(fstream* targetFile) {
 		this->targetFile = targetFile;
 		this->header = 0;
+		this->recoveryFlag = false;
 	}
 public:
 	void run();
 	void readContent();
 	void refreshContent();
 	void draw(string* cmdLine);
+	void saveAndExit();
 	string nextPage();
 	string previousPage();
 	string insertString(int lineLocation, int index, const string insertionString);
 	string deleteString(int lineLocation, int index, int deleteSize);
 	string changeString(const string targetString, const string newString);
-	string searchString(const string tarrgetString);
-	string saveAndExit();
+	string searchString(const string targetString);
 	string parseCmd(string cmdLine);
 	static ViEditor* getInstance(fstream* targetFile);
 };
@@ -38,10 +40,10 @@ public:
 ViEditor* ViEditor::instance = nullptr;
 
 void ViEditor::run() {
-	targetFile->open("test.txt", ios::in | ios::out | ios::app);
+	targetFile->open("test.txt", ios::in);
 	string cmdLine;
 	if (!targetFile->is_open()) {
-		cout << "[Error] 파일을 여는데 실패하였습니다\n";
+		cout << "Failed to open file!\n";
 		exit(1);
 	}
 	readContent();
@@ -53,25 +55,25 @@ void ViEditor::run() {
 }
 
 void ViEditor::readContent() {
-	string txt;
 	vector<string> words;
 	targetFile->seekg(0, std::ios::end);
 	int size = targetFile->tellg();
-	txt.resize(size);
+	contentText.resize(size);
 	targetFile->seekg(0, std::ios::beg);
-	targetFile->read(&txt[0], size);
+	targetFile->read(&contentText[0], size);
+	targetFile->close();
 	int begin = 0;
-	for (int i = 0; i < txt.size(); i++) {
-		if (txt[i] == ' ' || txt[i] == '\n') {
-			words.push_back(txt.substr(begin, i - begin + 1));
+	for (int i = 0; i < contentText.size(); i++) {
+		if (contentText[i] == ' ' || contentText[i] == '\n') {
+			words.push_back(contentText.substr(begin, i - begin + 1));
 			
 			begin = i+1;
 		}
-		if (txt[i] == '\0') {
-			words.push_back(txt.substr(begin, i - begin + 1));
+		if (contentText[i] == '\0') {
+			words.push_back(contentText.substr(begin, i - begin + 1));
 		}
-		if (i == txt.size()-1) {
-			words.push_back(txt.substr(begin, i - begin + 1) + '\0');
+		if (i == contentText.size()-1) {
+			words.push_back(contentText.substr(begin, i - begin + 1) + '\0');
 		}
 	}
 	int countSize = 0;
@@ -161,7 +163,7 @@ void ViEditor::draw(string* cmdLine) {
 	cout << "(콘솔메시지) " << consoleMassage << endl;
 	cout << "-------------------------------------------------------------------------------\n";
 	cout << "입력: ";
-	cin >> *cmdLine;
+	getline(cin, *cmdLine);
 	cout << "-------------------------------------------------------------------------------\n";
 }
 
@@ -170,10 +172,16 @@ string ViEditor::nextPage() {
 		return "This is last page!";
 	}
 	else if (content.size() - (header + 20) >= 20) {
+		if (recoveryFlag) {
+			refreshContent();
+		}
 		header += 20;
 		return "";
 	}
 	else if (content.size() - (header + 20) < 20) {
+		if (recoveryFlag) {
+			refreshContent();
+		}
 		header = content.size() - 20;
 		return "";
 	}
@@ -185,10 +193,16 @@ string ViEditor::previousPage() {
 		return "This is first page!";
 	}
 	else if (header - 20 > 0) {
+		if (recoveryFlag) {
+			refreshContent();
+		}
 		header -= 20;
 		return "";
 	}
 	else if (header - 20 < 0) {
+		if (recoveryFlag) {
+			refreshContent();
+		}
 		header = 0;
 		return "";
 	}
@@ -196,8 +210,8 @@ string ViEditor::previousPage() {
 }
 
 string ViEditor::insertString(int lineLocation, int index, const string insertionString) {
-	if (lineLocation > 0 && lineLocation < 21 && index >= 0 && index < content.at(lineLocation).size()) {
-		content.at(lineLocation - 1).insert(index, insertionString);
+	if (lineLocation > 0 && lineLocation < 21 && lineLocation <= content.size() && index >= 0 && index < content.at(lineLocation).size()) {
+		content.at(header + lineLocation - 1).insert(index, insertionString);
 		refreshContent();
 		return "";
 	}
@@ -207,8 +221,8 @@ string ViEditor::insertString(int lineLocation, int index, const string insertio
 }
 
 string ViEditor::deleteString(int lineLocation, int index, int deleteSize) {
-	if (lineLocation > 0 && lineLocation < 21 && index >= 0 && index < content.at(lineLocation).size() && index + deleteSize <= content.at(lineLocation).size()) {
-		content.at(lineLocation - 1).erase(index, deleteSize);
+	if (lineLocation > 0 && lineLocation < 21 && lineLocation <= content.size() && index >= 0 && index < content.at(lineLocation).size() && index + deleteSize <= content.at(lineLocation).size()) {
+		content.at(header + lineLocation - 1).erase(index, deleteSize);
 		refreshContent();
 		return "";
 	}
@@ -216,26 +230,63 @@ string ViEditor::deleteString(int lineLocation, int index, int deleteSize) {
 }
 
 string ViEditor::changeString(const string targetString, const string newString) {
+	int count = 0;
 	for(int i = 0; i < content.size(); i++){
-		while (content.at(i).find(targetString) != string::npos) {
-
+		int begin = 0;
+		while ((begin = content.at(i).find(targetString)) != string::npos) {
+			content.at(i).replace(begin, targetString.size(), newString);
+			count++;
 		}
 	}
-	refreshContent();
-	return "";
+	if (count == 0) {
+		return "No matching string found!";
+	}
+	else {
+		refreshContent();
+		return "";
+	}
 }
 
-string ViEditor::searchString(const string tarrgetString) {
-	return "";
+string ViEditor::searchString(const string targetString) {
+	int lineLocation = 0;
+	int index = 0;
+	string temp;
+	for (int i = 0; i < content.size(); i++) {
+		index = content.at(i).find(targetString);
+		if (index != string::npos) {
+			if (index == 0) {
+				header = i;
+			}
+			else {
+				string recoveryString = content.at(i);
+				recoveryFlag = true;
+				content.at(i) = recoveryString.substr(0, index);
+				content.insert(content.begin() + i + 1, recoveryString.substr(index, recoveryString.size()));
+				header = i + 1;
+			}
+			return "";
+		}
+	}
+	if (index == string::npos) {
+		return "No matching string found!";
+	}
+	return "Error!";
 }
 
-string ViEditor::saveAndExit() {
+void ViEditor::saveAndExit() {
+	contentText = "";
+	for (int i = 0; i < content.size(); i++) {
+		contentText += content.at(i);
+	}
+	targetFile->open("test.txt", ios::out);
+	if (targetFile->is_open()) {
+		*targetFile << contentText;
+	}
 	targetFile->close();
 	exit(1);
 }
 
 string ViEditor::parseCmd(string cmdLine) {
-	cmdLine.erase(remove(cmdLine.begin(), cmdLine.end(), ' '), cmdLine.end());
 	cmdLine.erase(remove(cmdLine.begin(), cmdLine.end(), '\n'), cmdLine.end());
 	vector<string> parseLine;
 	int begin = 0;
@@ -248,6 +299,7 @@ string ViEditor::parseCmd(string cmdLine) {
 			parseLine.push_back(cmdLine);
 		}
 	}
+	parseLine.at(0).erase(remove(parseLine.at(0).begin(), parseLine.at(0).end(), ' '), parseLine.at(0).end());
 	if (cmdLine.size() == 0) {
 		return "Invalid command!";
 	}
@@ -267,6 +319,8 @@ string ViEditor::parseCmd(string cmdLine) {
 		string insertionString;
 		if (parseLine.size() == 4) {
 			insertionString = parseLine.at(3);
+			parseLine.at(1).erase(remove(parseLine.at(1).begin(), parseLine.at(1).end(), ' '), parseLine.at(1).end());
+			parseLine.at(2).erase(remove(parseLine.at(2).begin(), parseLine.at(2).end(), ' '), parseLine.at(2).end());
 			try {
 				lineLocation = stoi(parseLine.at(1));
 				index = stoi(parseLine.at(2));
@@ -281,6 +335,9 @@ string ViEditor::parseCmd(string cmdLine) {
 	else if (!parseLine.at(0).compare("d")) {
 		int lineLocation, index, deletSize;
 		if (parseLine.size() == 4) {
+			parseLine.at(1).erase(remove(parseLine.at(1).begin(), parseLine.at(1).end(), ' '), parseLine.at(1).end());
+			parseLine.at(2).erase(remove(parseLine.at(2).begin(), parseLine.at(2).end(), ' '), parseLine.at(2).end());
+			parseLine.at(3).erase(remove(parseLine.at(3).begin(), parseLine.at(3).end(), ' '), parseLine.at(3).end());
 			try {
 				lineLocation = stoi(parseLine.at(1));
 				index = stoi(parseLine.at(2));
