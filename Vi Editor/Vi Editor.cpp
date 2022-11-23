@@ -44,7 +44,7 @@ void ViEditor::run() {
 	string cmdLine;
 	if (!targetFile->is_open()) {
 		cout << "Failed to open file!\n";
-		exit(1);
+		exit(0);
 	}
 	readContent();
 	while (1) {
@@ -174,6 +174,7 @@ string ViEditor::nextPage() {
 	else if (content.size() - (header + 20) >= 20) {
 		if (recoveryFlag) {
 			refreshContent();
+			recoveryFlag = false;
 		}
 		header += 20;
 		return "";
@@ -181,6 +182,7 @@ string ViEditor::nextPage() {
 	else if (content.size() - (header + 20) < 20) {
 		if (recoveryFlag) {
 			refreshContent();
+			recoveryFlag = false;
 		}
 		header = content.size() - 20;
 		return "";
@@ -195,6 +197,7 @@ string ViEditor::previousPage() {
 	else if (header - 20 > 0) {
 		if (recoveryFlag) {
 			refreshContent();
+			recoveryFlag = false;
 		}
 		header -= 20;
 		return "";
@@ -202,6 +205,7 @@ string ViEditor::previousPage() {
 	else if (header - 20 < 0) {
 		if (recoveryFlag) {
 			refreshContent();
+			recoveryFlag = false;
 		}
 		header = 0;
 		return "";
@@ -213,6 +217,7 @@ string ViEditor::insertString(int lineLocation, int index, const string insertio
 	if (lineLocation > 0 && lineLocation < 21 && lineLocation <= content.size() && index >= 0 && index < content.at(lineLocation).size()) {
 		content.at(header + lineLocation - 1).insert(index, insertionString);
 		refreshContent();
+		recoveryFlag = false;
 		return "";
 	}
 	else {
@@ -224,6 +229,7 @@ string ViEditor::deleteString(int lineLocation, int index, int deleteSize) {
 	if (lineLocation > 0 && lineLocation < 21 && lineLocation <= content.size() && index >= 0 && index < content.at(lineLocation).size() && index + deleteSize <= content.at(lineLocation).size()) {
 		content.at(header + lineLocation - 1).erase(index, deleteSize);
 		refreshContent();
+		recoveryFlag = false;
 		return "";
 	}
 	return "Invalid command!";
@@ -243,6 +249,7 @@ string ViEditor::changeString(const string targetString, const string newString)
 	}
 	else {
 		refreshContent();
+		recoveryFlag = false;
 		return "";
 	}
 }
@@ -283,7 +290,7 @@ void ViEditor::saveAndExit() {
 		*targetFile << contentText;
 	}
 	targetFile->close();
-	exit(1);
+	exit(0);
 }
 
 string ViEditor::parseCmd(string cmdLine) {
