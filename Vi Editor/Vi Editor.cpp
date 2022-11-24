@@ -168,22 +168,18 @@ void ViEditor::draw(string* cmdLine) {
 }
 
 string ViEditor::nextPage() {
+	if (recoveryFlag) {
+		refreshContent();
+		recoveryFlag = false;
+	}
 	if (content.size() == header + 20 || content.size() <= 20) {
 		return "This is last page!";
 	}
-	else if (content.size() - (header + 20) >= 20) {
-		if (recoveryFlag) {
-			refreshContent();
-			recoveryFlag = false;
-		}
+	else if (header + 40 < content.size()) {
 		header += 20;
 		return "";
 	}
-	else if (content.size() - (header + 20) < 20) {
-		if (recoveryFlag) {
-			refreshContent();
-			recoveryFlag = false;
-		}
+	else if (header + 40 >= content.size()) {
 		header = content.size() - 20;
 		return "";
 	}
@@ -191,22 +187,18 @@ string ViEditor::nextPage() {
 }
 
 string ViEditor::previousPage() {
+	if (recoveryFlag) {
+		refreshContent();
+		recoveryFlag = false;
+	}
 	if (header == 0) {
 		return "This is first page!";
 	}
 	else if (header - 20 > 0) {
-		if (recoveryFlag) {
-			refreshContent();
-			recoveryFlag = false;
-		}
 		header -= 20;
 		return "";
 	}
-	else if (header - 20 < 0) {
-		if (recoveryFlag) {
-			refreshContent();
-			recoveryFlag = false;
-		}
+	else if (header - 20 <= 0) {
 		header = 0;
 		return "";
 	}
