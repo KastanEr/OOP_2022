@@ -212,7 +212,7 @@ string ViEditor::insertString(int lineLocation, int index, const string insertio
 		return "";
 	}
 	else {
-		return "Invalid command! : Please enter a valid location";
+		return "Invalid command! : Please enter a valid value";
 	}
 }
 
@@ -224,7 +224,7 @@ string ViEditor::deleteString(int lineLocation, int index, int deleteSize) {
 		recoveryFlag = false;
 		return "";
 	}
-	return "Invalid command! : Please enter a valid location";
+	return "Invalid command! : Please enter a valid value";
 }
 
 string ViEditor::changeString(const string targetString, const string newString) {
