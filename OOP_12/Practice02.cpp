@@ -23,7 +23,7 @@ void bubble_sort(ForwardIterator first, ForwardIterator last, Compare comp) {
 
 class compGreater { // 오름차순 정렬에 사용하는 Functor
 public:
-	/* () 연산자를 오버로딩해 x > y의 결과를 리턴*/
+	/* () 연산자를 오버로딩해 x > y의 결과를 리턴 */
 	bool operator() (int x, int y) const {
 		return x > y;
 	}
@@ -31,7 +31,7 @@ public:
 
 class compLess { // 내림차순 정렬에 사용하는 Functor
 public:
-	/* () 연산자를 오버로딩해 x > y의 결과를 리턴*/
+	/* () 연산자를 오버로딩해 x > y의 결과를 리턴 */
 	bool operator() (int x, int y) const {
 		return x < y;
 	}
