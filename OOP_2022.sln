@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ViEditor", "ViEditor\ViEdit
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OOP_12", "OOP_12\OOP_12.vcxproj", "{39D5C685-0959-4CC6-960A-5AD290FEE1DD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OOP_13", "OOP_13\OOP_13.vcxproj", "{0ACFEE4E-D9E4-4B24-B84E-BA50EAA99D1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -141,6 +143,14 @@ Global
 		{39D5C685-0959-4CC6-960A-5AD290FEE1DD}.Release|x64.Build.0 = Release|x64
 		{39D5C685-0959-4CC6-960A-5AD290FEE1DD}.Release|x86.ActiveCfg = Release|Win32
 		{39D5C685-0959-4CC6-960A-5AD290FEE1DD}.Release|x86.Build.0 = Release|Win32
+		{0ACFEE4E-D9E4-4B24-B84E-BA50EAA99D1B}.Debug|x64.ActiveCfg = Debug|x64
+		{0ACFEE4E-D9E4-4B24-B84E-BA50EAA99D1B}.Debug|x64.Build.0 = Debug|x64
+		{0ACFEE4E-D9E4-4B24-B84E-BA50EAA99D1B}.Debug|x86.ActiveCfg = Debug|Win32
+		{0ACFEE4E-D9E4-4B24-B84E-BA50EAA99D1B}.Debug|x86.Build.0 = Debug|Win32
+		{0ACFEE4E-D9E4-4B24-B84E-BA50EAA99D1B}.Release|x64.ActiveCfg = Release|x64
+		{0ACFEE4E-D9E4-4B24-B84E-BA50EAA99D1B}.Release|x64.Build.0 = Release|x64
+		{0ACFEE4E-D9E4-4B24-B84E-BA50EAA99D1B}.Release|x86.ActiveCfg = Release|Win32
+		{0ACFEE4E-D9E4-4B24-B84E-BA50EAA99D1B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
